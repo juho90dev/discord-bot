@@ -1,6 +1,6 @@
 # Discord-Bot
 
-스프링 부트(Spring Boot) 기반의 **다시능 디스코드 봇** 프로젝트
+스프링 부트(Spring Boot) 기반의 **다기능 디스코드 봇** 프로젝트
 
 ## Tech Stack
 * **Language:** Java 17
