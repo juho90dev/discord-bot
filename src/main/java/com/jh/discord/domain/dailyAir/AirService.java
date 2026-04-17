@@ -82,12 +82,13 @@ public class AirService {
 			log.info("미세먼지: {}, 초미세먼지: {}, 상태: {}", pm10, pm25, status);
 			return """
 					영통구 미세먼지 정보
-					측정시간: %s
-
+					
 					미세먼지: %s
 					초미세먼지: %s
 					대기질 상태는 [%s] 입니다.
-					""".formatted(time, pm10, pm25, status);
+					
+					측정시간: %s
+					""".formatted(pm10, pm25, status, time);
 
 		} catch (Exception e) {
 			log.error("미세먼지 데이터 처리 오류", e);
@@ -152,12 +153,13 @@ public class AirService {
 			log.info("기온: {}, 강수량: {}, 날씨: {}", temp, rain, weatherStatus);
 			return """
 					영통구 날씨 정보
-					측정시간: %s
 
 					기온: %s℃
 					강수량: %smm
-					날씨: %s
-					""".formatted(displayTime, temp, rain, weatherStatus);
+					하늘 상태는 날씨: [%s] 입니다.
+					
+					측정시간: %s
+					""".formatted(temp, rain, weatherStatus, displayTime);
 		} catch (Exception e) {
 			return "날씨 데이터를 불러오는 데 실패했습니다.";
 		}

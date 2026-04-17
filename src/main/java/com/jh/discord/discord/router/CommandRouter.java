@@ -18,20 +18,42 @@ public class CommandRouter {
 		if (message == null || !message.startsWith("/")) return null;
 		
 		String command = message.substring(1).trim();
-
-		if (message.contains("날씨"))
-			return airService.getDustData() + "\n\n" + airService.getTempData();
-
-		if (message.contains("먼지")) {
-			return airService.getDustData();
+		String result;
+		
+		
+		switch(command) {
+			case "날씨" -> {
+				String dust = airService.getDustData();
+                String temp = airService.getTempData();
+                result = dust + "\n\n" + temp;
+			}
+			
+			case "먼지" -> {
+				result = airService.getDustData();
+			}
+			
+			case "온도" -> {
+				result = airService.getTempData();
+			}
+			
+			default -> {
+				result = null;
+			}
 		}
+//
+//		if (message.contains("날씨"))
+//			return airService.getDustData() + "\n\n" + airService.getTempData();
+//
+//		if (message.contains("먼지")) {
+//			return airService.getDustData();
+//		}
+//
+//		if (message.contains("온도")) {
+//			return airService.getTempData();
+//		}
 
-		if (message.contains("온도")) {
-			return airService.getTempData();
-		}
 
-
-		return null;
+		return result;
 	}
 
 }
