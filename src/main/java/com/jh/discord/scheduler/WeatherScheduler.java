@@ -17,7 +17,7 @@ public class WeatherScheduler {
 	private final AirService airService;
 	private final DiscordService discordService;
 
-	@Scheduled(cron = "0 0 10/4 * * *")
+	@Scheduled(cron = "0 5 10/4 * * *")
 	public void sendDailyWeather() {
 
 		String dustData;
@@ -37,7 +37,7 @@ public class WeatherScheduler {
 			
 		}catch(Exception e) {
 			log.error("기온 조회 실패", e);
-			tempData = "미세먼지 정보 조회 실패";
+			tempData = "기온 정보 조회 실패";
 		}
 
 		String message = dustData + "\n\n" + tempData;

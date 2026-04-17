@@ -104,7 +104,7 @@ public class AirService {
 			// 기상청 실황 데이터는 매시 40분 이후에 생성된다고한다.
 			// 40분 전이라면 '이전 시간' 데이터를 조회
 			if (now.getMinute() < 50) {
-				now = now.minusHours(2);
+				now = now.minusHours(1);
 			}
 
 			// 날짜 포맷 (YYYYMMDD)
