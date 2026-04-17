@@ -96,7 +96,7 @@ public class AirService {
 	}
 
 	
-	// 온도
+	// 온도 api
 	public String getTempData() {
 		try {
 			LocalDateTime now = LocalDateTime.now();
