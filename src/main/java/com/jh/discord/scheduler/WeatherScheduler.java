@@ -17,7 +17,7 @@ public class WeatherScheduler {
 	private final AirService airService;
 	private final DiscordService discordService;
 
-	@Scheduled(cron = "0 5 10/4 * * *")
+	//@Scheduled(cron = "0 5 10/4 * * *", zone = "Asia/Seoul")
 	public void sendDailyWeather() {
 
 		String dustData;
@@ -47,4 +47,23 @@ public class WeatherScheduler {
 		log.info("날씨 정보 전송 완료 - 메시지 내용: {}", message);
 	}
 
+	// 오전 10시 5분
+	@Scheduled(cron = "0 5 10 * * *", zone = "Asia/Seoul")
+	public void weatherMorning() {
+		sendDailyWeather();
+	}
+	
+	// 오후 1시	
+	@Scheduled(cron = "0 0 13 * * *", zone = "Asia/Seoul")
+	public void weatherAfternoon() {
+		sendDailyWeather();
+	}
+	
+	// 오후 5시
+	@Scheduled(cron = "0 0 17 * * *", zone = "Asia/Seoul")
+	public void weatherEvening() {
+		sendDailyWeather();
+	}
+	
+	
 }
