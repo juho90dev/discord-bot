@@ -22,18 +22,8 @@ public class FortuneCrawler {
 	private final String[] NAMES = {"쥐띠", "소띠", "호랑이띠", "토끼띠", "용띠", "뱀띠", "말띠", "양띠", "원숭이띠", "닭띠", "개띠", "돼지띠"};
 	
 	
-	// ================== 띠별 운세 =======================
+	// ==================네이버 운세 =======================
 
-//	// 전체 운세
-//	public Document getAllFortune() throws Exception {
-//		String query = "띠별 운세";
-//		String encoded = URLEncoder.encode(query, StandardCharsets.UTF_8);
-//
-//		String url = "https://search.naver.com/search.naver?query=" + encoded;
-//
-//		Document doc = Jsoup.connect(url).userAgent(USER_AGENT).get();
-//		return doc;
-//	}
 	// 전체 운세
 	public String getAllFortune() {
         StringBuilder totalResult = new StringBuilder();
