@@ -53,17 +53,22 @@ public class CommandRouter {
 			case "운세" -> {
 				if(part.length > 1) {
 					String fortune = part[1];
-					result = fortuneService.getPartFortune(fortune);
+					result = fortuneService.naverDetail(fortune);
 				} else {
-					result = fortuneService.getAllFortune();
+					result = fortuneService.naverSummary();
 				}
 			}
 			
-//			case "옥희" -> {
-//				System.out.println("옥희 들어옴");
-//				result = fortuneService.getOkkyFortune();
-//			}
-//			
+			case "옥희" -> {
+				if(part.length > 1) {
+					String fortune = part[1];
+					result = fortuneService.okkyDetail(fortune);
+				}else {
+					result = fortuneService.okkySummary();
+					
+				}
+			}
+			
 			default -> {
 				result = null;
 			}

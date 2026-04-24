@@ -13,36 +13,9 @@ import lombok.RequiredArgsConstructor;
 public class FortuneService {
 
 	private final FortuneCrawler fortuneCrawler;
-
-//	public String getAllFortune() {
-//		try {
-//
-//			Document doc = fortuneCrawler.getAllFortune();
-//			//Elements items = doc.select("ul._list li");
-//			Elements items = doc.select("ul.sign_lst li");
-//			StringBuilder sb = new StringBuilder("**오늘의 띠별 운세 요약**");
-//
-//			for (Element item : items) {
-//				// 띠 이름
-//				String name = item.select("dt.tit").text();
-//				// 운세 내용
-//				String text = item.select("p").text();
-//				if (!name.isEmpty()) {
-//					sb.append("**[").append(name).append("]**");
-//					sb.append("> ").append(text).append("\n\n");
-//				}
-//			}
-//			
-//			if (items.isEmpty()) {
-//	            return "운세 데이터를 찾을 수 없습니다. (HTML 구조 확인 필요)";
-//	        }
-//
-//			return sb.toString();
-//		} catch (Exception e) {
-//			return "오늘의 운세를 가져오는 중 오류가 발생했습니다.";
-//		}
-//	}
-	public String getAllFortune() {
+	private final String USER_AGENT = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Whale/4.36.368.16 Safari/537.36";
+	
+	public String naverSummary() {
         String data = fortuneCrawler.getAllFortune();
 
         if (data == null || data.isEmpty()) {
@@ -59,79 +32,66 @@ public class FortuneService {
 	}
 	
 	
-	public String getPartFortune(String data) {
-
-		try {
-			Document doc = fortuneCrawler.getPartFortune(data);
-			StringBuilder sb = new StringBuilder();
-			
-			sb.append(data).append(" 오늘의 운세**\n\n");
-			
-			System.out.println(sb);
-			
-			// 전체 요약 운세 가져오기 (p 태그)
-			//String summary = doc.select("li.lst_r p").first().text();
-			Element summaryElement = doc.selectFirst("p._cs_fortune_text");
-			System.out.println("dfasfa"+summaryElement);
-			
-//			if (!summary.isEmpty()) {
-//				sb.append("**요약 :** ").append(summary).append("\n");
-//				sb.append("──────────────────\n");
-//			}
-			if (summaryElement != null) {
-	            sb.append("**[총평]**\n");
-	            sb.append("> ").append(summaryElement.text()).append("\n\n");
-	            sb.append("──────────────────\n");
-	        }
-			
-			
-			// [연도별] 상세 내용 가져오기 (dl.lst_infor)
-			//Elements items = doc.select("dl.lst_infor div");
-			Elements items = doc.select("dl._cs_fortune_list div");
-			
-			for (Element item : items) {
-				
-				// xx년생
-				String year = item.select("dt").text();
-				// 운세 내용
-				String content = item.select("dd").text(); 
-				
-				System.out.println(year);
-				
-//				if (!year.isEmpty() && !content.isEmpty()) {
-//					sb.append("-> **").append(year).append("** : ").append(content).append("\n");
-//				}
-				
-				if (!year.isEmpty() && !content.isEmpty()) {
-	                sb.append("📌 **").append(year).append("**\n");
-	                sb.append("└ ").append(content).append("\n\n");
-	            }
-			}
-			
-			if (sb.length() < 20) {
-	            return data + " 정보를 찾을 수 없습니다. (HTML 구조가 변경되었을 수 있습니다.)";
-	        }
-			
-			
-			return sb.toString();
-
-		} catch (Exception e) {
-			return data + " 정보를 가져오지 못했습니다.";
-		}
-	}
-
-	
-	public String getOkkyFortune() {
-		System.out.println("서비스 진입");
-		try {
-			fortuneCrawler.okkyFortune();
-			
-		}catch(Exception e) {
-			e.printStackTrace();
-		}
+	public String naverDetail(String name) {
+		System.out.println(">>> 네이버에서 운세를 불러오는 중...");
+		String searchName = name.endsWith("띠") ? name : name + "띠";
+		String data = fortuneCrawler.detailFortune(searchName);
 		
-		return null;
-    }
+		if (data.isEmpty()) {
+	        System.out.println("데이터를 찾을 수 없습니다. 띠 이름을 정확히 입력해주세요 (예: 쥐띠)");
+	        return null;
+	    }
+		StringBuilder sb = new StringBuilder();
+		sb.append("--------------------------------------\n");
+	    sb.append("        [" + searchName + " 연도별 운세]       \n");
+	    sb.append("--------------------------------------\n");
+	    sb.append(data).append("\n");
+	    sb.append("--------------------------------------");
+
+		return sb.toString();
+	}
 	
+	// okky 옥희보살 개발자 운세
+	public String okkySummary() {
+	    // System.out.println(">>> 옥희보살 개발자 운세를 불러오는 중...");
+
+		// 최신 글 찾기
+	    String articleId = fortuneCrawler.lastPost();
+	    // 해당 글에서 운세 데이터 크롤링
+	    String data = fortuneCrawler.getOkkySummary(articleId);
+
+	    if (data == null || data.isEmpty()) {
+	        return "옥희보살 운세 데이터를 불러오는 데 실패했습니다.";
+	    }
+
+	    
+	    StringBuilder sb = new StringBuilder();
+	    sb.append("--------------------------------------\n");
+	    sb.append("      [옥희보살's 띠별 요약 운세]       \n");
+	    sb.append("--------------------------------------\n");
+	    sb.append(data);
+	    sb.append("--------------------------------------");
+        return sb.toString();
+	}
 	
+	public String okkyDetail(String name) {
+		String articleId = fortuneCrawler.lastPost();
+		
+		String searchName = name.endsWith("띠") ? name : name + "띠";
+		String data = fortuneCrawler.getOkkyDetail(articleId, searchName);
+		
+		if (data.isEmpty()) {
+	        System.out.println("데이터를 찾을 수 없습니다. 띠 이름을 정확히 입력해주세요 (예: 쥐띠)");
+	        return null;
+	    }
+		
+		
+		StringBuilder sb = new StringBuilder();
+		sb.append("--------------------------------------\n");
+	    sb.append("        [" + searchName + " 연도별 운세]       \n");
+	    sb.append("--------------------------------------\n");
+	    sb.append(data);
+	    sb.append("--------------------------------------");
+		return sb.toString();
+	}
 }

@@ -4,6 +4,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import com.jh.discord.domain.dailyAir.AirService;
+import com.jh.discord.domain.dailyFortune.FortuneService;
 import com.jh.discord.service.DiscordService;
 
 import lombok.RequiredArgsConstructor;
@@ -15,6 +16,7 @@ import lombok.extern.slf4j.Slf4j;
 public class WeatherScheduler {
 
 	private final AirService airService;
+	private final FortuneService fortuneService;
 	private final DiscordService discordService;
 
 	//@Scheduled(cron = "0 5 10/4 * * *", zone = "Asia/Seoul")
@@ -46,9 +48,23 @@ public class WeatherScheduler {
 
 		log.info("날씨 정보 전송 완료 - 메시지 내용: {}", message);
 	}
+	
+	public void sendFortune() {
+		
+		String fortuneData;
+		
+		try {
+			// 옥희보살 운세 만들면 추가
+			// fortuneData = fortuneService.getOkkyData();
+			// discordService.sendMessage("오늘의 운세: " + fortune);
+		}catch(Exception e) {
+			log.error("운세 조회 실패", e);
+			fortuneData ="운세 조회 실패";
+		}
+	}
 
-	// 오전 10시 5분
-	@Scheduled(cron = "0 5 10 * * *", zone = "Asia/Seoul")
+	// 오전 9시 30분
+	@Scheduled(cron = "0 30 9 * * *", zone = "Asia/Seoul")
 	public void weatherMorning() {
 		sendDailyWeather();
 	}
@@ -65,5 +81,9 @@ public class WeatherScheduler {
 		sendDailyWeather();
 	}
 	
+	
+	public void fortune() {
+		sendFortune();
+	}
 	
 }
