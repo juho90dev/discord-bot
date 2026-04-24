@@ -73,17 +73,7 @@ public class CommandRouter {
 				result = null;
 			}
 		}
-//
-//		if (message.contains("날씨"))
-//			return airService.getDustData() + "\n\n" + airService.getTempData();
-//
-//		if (message.contains("먼지")) {
-//			return airService.getDustData();
-//		}
-//
-//		if (message.contains("온도")) {
-//			return airService.getTempData();
-//		}
+
 
 
 		return result;

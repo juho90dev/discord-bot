@@ -104,7 +104,7 @@ public class AirService {
 
 			// 기상청 실황 데이터는 매시 40분 이후에 생성된다고한다.
 			// 40분 전이라면 '이전 시간' 데이터를 조회
-			if (now.getMinute() < 50) {
+			if (now.getMinute() < 45) {
 				now = now.minusHours(1);
 			}
 
@@ -119,6 +119,21 @@ public class AirService {
 			String response = airApiClient.tempApi(baseDate, baseTime);
 			
 			JsonNode root = mapper.readTree(response);
+			
+			String resultCode = root.path("response").path("header").path("resultCode").asText();
+
+	        // 만약 결과가 "데이터 없음(03)"이라면, 한 시간 더 전 데이터를 가져옴
+	        if ("03".equals(resultCode)) {
+	            log.info("해당 시간 데이터가 없어 한 시간 전 데이터를 재시도합니다.");
+	            now = now.minusHours(1);
+	            
+	            String retryDate = now.format(DateTimeFormatter.ofPattern("yyyyMMdd"));
+	            String retryTime = now.format(DateTimeFormatter.ofPattern("HH00"));
+	            
+	            response = airApiClient.tempApi(retryDate, retryTime);
+	            root = mapper.readTree(response); 
+	        }
+			
 			JsonNode items = root.path("response").path("body").path("items").path("item");
 
 			String temp = "";

@@ -57,11 +57,12 @@ public class WeatherScheduler {
 			// 운세 가져오기
 			fortuneData = fortuneService.naverSummary();
 			// 디스코드에 알림봇으로 메세지 보내기
-			discordService.sendMessage("오늘의 운세: " + fortuneData);
 		}catch(Exception e) {
 			log.error("운세 조회 실패", e);
 			fortuneData ="운세 조회 실패";
 		}
+		discordService.sendMessage("오늘의 운세: " + fortuneData);
+		log.info("운세 정보 전송 완료 - 메시지 내용: {}", fortuneData);
 	}
 
 	// 오전 9시 30분
