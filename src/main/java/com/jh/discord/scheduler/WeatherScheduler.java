@@ -54,9 +54,10 @@ public class WeatherScheduler {
 		String fortuneData;
 		
 		try {
-			// 옥희보살 운세 만들면 추가
-			// fortuneData = fortuneService.getOkkyData();
-			// discordService.sendMessage("오늘의 운세: " + fortune);
+			// 운세 가져오기
+			fortuneData = fortuneService.naverSummary();
+			// 디스코드에 알림봇으로 메세지 보내기
+			discordService.sendMessage("오늘의 운세: " + fortuneData);
 		}catch(Exception e) {
 			log.error("운세 조회 실패", e);
 			fortuneData ="운세 조회 실패";
