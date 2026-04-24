@@ -25,41 +25,13 @@ public class DiscordListener extends ListenerAdapter{
 
 		String message = event.getMessage().getContentRaw();
 		String response = commandRouter.route(message);
-		
-//		
-//		String airData = airService.getDustData();
-//		String weather = airService.getTempData();
-//
-//		// 메세지가 있으면 무조건 실행
-//		if (message.contains("오늘")) {
-//
-//			// 디스코드 채팅으로 응답 (JDA)
-//			event.getChannel().sendMessage(airData + "\n\n" + weather).queue();
-//		} else if (message.contains("먼지")) {
-//			event.getChannel().sendMessage(airData).queue();
-//		} else if (message.contains("온도")) {
-//			event.getChannel().sendMessage(weather).queue();
-//		}
+
         if (response != null) {
             event.getChannel().sendMessage(response).queue();
         }
 		
 	}
 	
-	
-	
-//	public void onSlashCommandInteraction(SlashCommandInteractionEvent event) {
-//		String message = event.getName();
-//		
-//		String response = commandRouter.route(message);
-//		
-//		if (response != null) {
-//            // 슬래시 커맨드는 응답할 때 event.reply()를 사용한다.
-//            event.reply(response).queue();
-//        } else {
-//            event.reply("알 수 없는 명령어입니다.").setEphemeral(true).queue();
-//        }
-//	}
 
 	
 	public void onSlashCommandInteraction(SlashCommandInteractionEvent event) {
@@ -104,29 +76,7 @@ public class DiscordListener extends ListenerAdapter{
 	    }).start();
 	}
 	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
+
 	
 	
 }
