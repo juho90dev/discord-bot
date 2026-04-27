@@ -12,6 +12,8 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import com.jh.discord.domain.dailyAir.dto.GeoPoint;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import tools.jackson.databind.JsonNode;
@@ -169,6 +171,94 @@ public class AirService {
 			return """
 					영통구 날씨 정보
 
+					기온: %s℃
+					강수량: %smm
+					하늘 상태는 날씨: [%s] 입니다.
+					
+					측정시간: %s
+					""".formatted(temp, rain, weatherStatus, displayTime);
+		} catch (Exception e) {
+			return "날씨 데이터를 불러오는 데 실패했습니다.";
+		}
+	}
+	// 온도 api - 지역 추가
+	public String getTempDatas(String locationName) {
+		try {
+			
+			// 지역명으로 좌표 정보(Enum) 가져오기
+	        LocationCode code = LocationCode.findByKeyword(locationName);
+	        // 2. [추가] DTO 객체 생성 (배달 상자에 담기)
+	        GeoPoint point = new GeoPoint(code.getNx(), code.getNy(), code.getFullName());
+			
+			LocalDateTime now = LocalDateTime.now();
+			
+			// 기상청 실황 데이터는 매시 40분 이후에 생성된다고한다.
+			// 40분 전이라면 '이전 시간' 데이터를 조회
+			if (now.getMinute() < 45) {
+				now = now.minusHours(1);
+			}
+			
+			// 날짜 포맷 (YYYYMMDD)
+			String baseDate = now.format(DateTimeFormatter.ofPattern("yyyyMMdd"));
+			// 시간 포맷 (HH00 - 실황은 항상 정각 단위로 호출)
+			String baseTime = now.format(DateTimeFormatter.ofPattern("HH00"));
+			// 화면 출력용 데이터 (새로 추가)
+			String displayTime = now.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:00"));
+			
+			// 클라이언트를 통해 데이터 호출 시 좌표(nx, ny)를 동적으로 전달
+			String response = airApiClient.tempApis(baseDate, baseTime, point.getNx(), point.getNy());
+			
+			JsonNode root = mapper.readTree(response);
+			
+			String resultCode = root.path("response").path("header").path("resultCode").asText();
+			
+			// 만약 결과가 "데이터 없음(03)"이라면, 한 시간 더 전 데이터를 가져옴
+			if ("03".equals(resultCode)) {
+				log.info("해당 시간 데이터가 없어 한 시간 전 데이터를 재시도합니다.");
+				now = now.minusHours(1);
+				
+				String retryDate = now.format(DateTimeFormatter.ofPattern("yyyyMMdd"));
+				String retryTime = now.format(DateTimeFormatter.ofPattern("HH00"));
+				
+				response = airApiClient.tempApis(retryDate, retryTime, point.getNx(), point.getNy());
+				root = mapper.readTree(response); 
+			}
+			
+			JsonNode items = root.path("response").path("body").path("items").path("item");
+			
+			String temp = "";
+			String rain = "0";
+			String humidity = "";
+			String pty = "0";
+			
+			for (JsonNode item : items) {
+				String category = item.path("category").asString();
+				String value = item.path("obsrValue").asString();
+				
+				switch (category) {
+				case "T1H" -> temp = value;
+				case "RN1" -> rain = value;
+				case "REH" -> humidity = value;
+				case "PTY" -> pty = value;
+				}
+			}
+			
+			// 강수 형태 해석
+			String weatherStatus = switch (pty) {
+			case "1" -> "비";
+			case "2" -> "비/눈";
+			case "3" -> "눈";
+			case "5" -> "빗방울";
+			case "6" -> "빗방울/눈날림";
+			case "7" -> "눈날림";
+			default -> "맑음";
+			};
+			
+			String time = baseDate + " " + baseTime;
+			log.info("기온: {}, 강수량: {}, 날씨: {}", temp, rain, weatherStatus);
+			return """
+					영통구 날씨 정보
+					
 					기온: %s℃
 					강수량: %smm
 					하늘 상태는 날씨: [%s] 입니다.
