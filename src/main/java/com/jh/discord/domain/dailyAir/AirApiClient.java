@@ -57,5 +57,21 @@ public class AirApiClient {
 		return response;
 	}
 	
+	public String testtempApi(String baseDate, String baseTime, String nx, String ny) {
+	    URI uri = UriComponentsBuilder.fromUriString(TEMP_URL)
+	            .queryParam("serviceKey", SERVICE_KEY)
+	            .queryParam("numOfRows", "15")
+	            .queryParam("pageNo", "1")
+	            .queryParam("dataType", "JSON")
+	            .queryParam("base_date", baseDate)
+	            .queryParam("base_time", baseTime)
+	            .queryParam("nx", nx) // 파라미터로 받은 값 적용
+	            .queryParam("ny", ny) // 파라미터로 받은 값 적용
+	            .build(true).toUri();
+	           
+	    String response = webClient.get().uri(uri).retrieve().bodyToMono(String.class).block();
+	    
+	    return response;
+	}
 	
 }
