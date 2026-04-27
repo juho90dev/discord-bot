@@ -182,7 +182,7 @@ public class AirService {
 		}
 	}
 	// 온도 api - 지역 추가
-	public String getTempDatas(String locationName) {
+	public String getTempLocation(String locationName) {
 		try {
 			
 			// 지역명으로 좌표 정보(Enum) 가져오기
@@ -206,7 +206,7 @@ public class AirService {
 			String displayTime = now.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:00"));
 			
 			// 클라이언트를 통해 데이터 호출 시 좌표(nx, ny)를 동적으로 전달
-			String response = airApiClient.tempApis(baseDate, baseTime, point.getNx(), point.getNy());
+			String response = airApiClient.tempLocationApi(baseDate, baseTime, point.getNx(), point.getNy());
 			
 			JsonNode root = mapper.readTree(response);
 			
@@ -220,7 +220,7 @@ public class AirService {
 				String retryDate = now.format(DateTimeFormatter.ofPattern("yyyyMMdd"));
 				String retryTime = now.format(DateTimeFormatter.ofPattern("HH00"));
 				
-				response = airApiClient.tempApis(retryDate, retryTime, point.getNx(), point.getNy());
+				response = airApiClient.tempLocationApi(retryDate, retryTime, point.getNx(), point.getNy());
 				root = mapper.readTree(response); 
 			}
 			
@@ -257,14 +257,14 @@ public class AirService {
 			String time = baseDate + " " + baseTime;
 			log.info("기온: {}, 강수량: {}, 날씨: {}", temp, rain, weatherStatus);
 			return """
-					영통구 날씨 정보
+					%s 날씨 정보
 					
 					기온: %s℃
 					강수량: %smm
 					하늘 상태는 날씨: [%s] 입니다.
 					
 					측정시간: %s
-					""".formatted(temp, rain, weatherStatus, displayTime);
+					""".formatted(point.getFullName(),temp, rain, weatherStatus, displayTime);
 		} catch (Exception e) {
 			return "날씨 데이터를 불러오는 데 실패했습니다.";
 		}

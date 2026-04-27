@@ -57,7 +57,7 @@ public class AirApiClient {
 		return response;
 	}
 	
-	public String tempApis(String baseDate, String baseTime, String nx, String ny) {
+	public String tempLocationApi(String baseDate, String baseTime, String nx, String ny) {
 	    URI uri = UriComponentsBuilder.fromUriString(TEMP_URL)
 	            .queryParam("serviceKey", SERVICE_KEY)
 	            .queryParam("numOfRows", "15")
