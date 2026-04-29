@@ -49,20 +49,30 @@ public class WeatherScheduler {
 		log.info("날씨 정보 전송 완료 - 메시지 내용: {}", message);
 	}
 	
-	public void sendFortune() {
+	public void sendOkkyFortune() {
 		
-		String fortuneData;
+		String[] zodiacs = {"호랑이", "말"};
+		StringBuilder sb = new StringBuilder("**오늘의 개발자 운세**\n\n");
 		
-		try {
-			// 운세 가져오기
-			fortuneData = fortuneService.naverSummary();
-			// 디스코드에 알림봇으로 메세지 보내기
-		}catch(Exception e) {
-			log.error("운세 조회 실패", e);
-			fortuneData ="운세 조회 실패";
-		}
-		discordService.sendMessage("오늘의 운세: " + fortuneData);
-		log.info("운세 정보 전송 완료 - 메시지 내용: {}", fortuneData);
+		// 서비스 호출
+		for (String zodiac : zodiacs) {
+	        try {
+	            String fortuneResult = fortuneService.okkyDetail(zodiac);
+	            
+	            if (fortuneResult != null) {
+	                sb.append(fortuneResult).append("\n\n");
+	            }
+	        } catch (Exception e) {
+	            log.error("{} 운세 조회 중 오류 발생", zodiac, e);
+	            sb.append(zodiac).append("띠 운세 조회 실패\n\n");
+	        }
+	    }
+
+		// 메세지가 비어있지 않으면 전송
+		if (sb.length() > 0) {
+	        discordService.sendMessage(sb.toString());
+	    }
+	    log.info("운세 알림 전송 완료");
 	}
 
 	// 오전 9시 30분
@@ -83,9 +93,10 @@ public class WeatherScheduler {
 		sendDailyWeather();
 	}
 	
-	
+	// 오전 11시
+	//@Scheduled(cron = "0 0 11 * * *", zone = "Asia/Seoul")
 	public void fortune() {
-		sendFortune();
+		sendOkkyFortune();
 	}
 	
 }
