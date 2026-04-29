@@ -31,7 +31,9 @@ public class CommandRouter {
 			}
 			
 			case "먼지" -> {
-				result = airService.getDustData();
+				OptionMapping dustOpt = event.getOption("지역");
+				String location =(dustOpt == null)? "영통" : dustOpt.getAsString();
+				result = airService.getDustLocation(location);
 			}
 			
 			case "온도" -> {
