@@ -63,7 +63,6 @@ public class DiscordConfig {
 					Commands.slash("날씨", "온도와 먼지 정보를 통합해서 알려줍니다"),
 					Commands.slash("먼지", "미세먼지 및 초미세먼지 수치를 알려줍니다")
 						.addOptions(new OptionData(OptionType.STRING, "지역", "확인할 지역명을 입력하세요 (예:영통, 강남)", false)),
-					// 온도 명령어 수정 부분
 			        Commands.slash("기상", "현재 기온 정보를 알려줍니다")
 			            .addOptions(new OptionData(OptionType.STRING, "지역", "확인할 지역명을 입력하세요 (예:영통, 강남)", false)),
 					Commands.slash("로또", "로또 번호를 랜덤으로 알려줍니다"),
