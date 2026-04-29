@@ -97,6 +97,73 @@ public class AirService {
 			return "데이터를 가져오지 못했습니다: " + e.getMessage();
 		}
 	}
+	
+	
+	// 지역명
+	public String getDustLocation(String locationName) {
+		try {
+			
+			// 입력받은 지역명으로 Enum에서 정보 찾기
+			LocationCode code = LocationCode.findByKeyword(locationName);
+			String stationName = code.getStationName();
+			
+			// 그냥 넣으면 인식을 못하니 인코딩해줘야함
+			String encodedStation = URLEncoder.encode(stationName, StandardCharsets.UTF_8);
+			
+			String response = airApiClient.dustApi(encodedStation);
+			
+			// JSON 파싱
+			
+			JsonNode root = mapper.readTree(response);
+			// 데이터 위치
+			JsonNode item = root.path("response").path("body").path("items").get(0);
+			
+			// pm10 → 미세먼지
+			// pm25 → 초미세먼지
+			// time → 측정 시간
+			String pm10 = item.path("pm10Value").asString();
+			String pm25 = item.path("pm25Value").asString();
+			String time = item.path("dataTime").asString();
+			
+			// "-"는 값 없음 의미 → 숫자로 변환하면 에러 방지
+			if ("-".equals(pm10) || "-".equals(pm25)) {
+				log.warn("미세먼지 데이터 없음");
+				
+				return "영통구 미세먼지 측정 데이터가 현재 없습니다. (시간: %s)".formatted(time);
+			}
+			
+			// 문자열 -> 숫자열
+			int pm10Val = Integer.parseInt(pm10);
+			int pm25Val = Integer.parseInt(pm25);
+			int worst = Math.max(pm10Val, pm25Val);
+			String status = "";
+			
+			if (worst <= 30) {
+				status = "좋음";
+			} else if (worst < 81) {
+				status = "보통";
+			} else if (worst < 151) {
+				status = "나쁨";
+			} else {
+				status = "매우 나쁨";
+			}
+			
+			log.info("미세먼지: {}, 초미세먼지: {}, 상태: {}", pm10, pm25, status);
+			return """
+					%s 미세먼지 정보
+					
+					미세먼지: %s
+					초미세먼지: %s
+					대기질 상태는 [%s] 입니다.
+					
+					측정시간: %s
+					""".formatted(code.getFullName(),pm10, pm25, status, time);
+			
+		} catch (Exception e) {
+			log.error("미세먼지 데이터 처리 오류", e);
+			return "데이터를 가져오지 못했습니다: " + e.getMessage();
+		}
+	}
 
 	
 	// 온도 api
