@@ -169,7 +169,7 @@ public class AirService {
 			String time = baseDate + " " + baseTime;
 			log.info("기온: {}, 강수량: {}, 날씨: {}", temp, rain, weatherStatus);
 			return """
-					영통구 날씨 정보
+					영통구 기상 정보
 
 					기온: %s℃
 					강수량: %smm
@@ -257,7 +257,7 @@ public class AirService {
 			String time = baseDate + " " + baseTime;
 			log.info("기온: {}, 강수량: {}, 날씨: {}", temp, rain, weatherStatus);
 			return """
-					%s 날씨 정보
+					%s 기상 정보
 					
 					기온: %s℃
 					강수량: %smm
