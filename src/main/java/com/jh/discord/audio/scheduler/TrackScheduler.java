@@ -1,4 +1,4 @@
-package com.jh.discord.domain.audio.scheduler;
+package com.jh.discord.audio.scheduler;
 
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -42,5 +42,5 @@ public class TrackScheduler extends AudioEventAdapter{
             nextTrack();
         }
     }
-    
+
 }

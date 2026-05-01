@@ -1,9 +1,8 @@
-package com.jh.discord.domain.audio.handler;
+package com.jh.discord.audio.handler;
 
 import java.nio.ByteBuffer;
 
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayer;
-import com.sedmelluq.discord.lavaplayer.track.playback.AudioFrame;
 import com.sedmelluq.discord.lavaplayer.track.playback.MutableAudioFrame;
 
 import net.dv8tion.jda.api.audio.AudioSendHandler;
@@ -41,5 +40,5 @@ public class AudioPlayerSendHandler implements AudioSendHandler{
         // LavaPlayer는 기본적으로 Opus 인코딩을 사용
         return true;
     }
-	
+
 }
