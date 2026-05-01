@@ -3,8 +3,8 @@ package com.jh.discord.scheduler;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
-import com.jh.discord.domain.dailyAir.AirService;
-import com.jh.discord.domain.dailyFortune.FortuneService;
+import com.jh.discord.dailyAir.service.AirService;
+import com.jh.discord.dailyFortune.service.FortuneService;
 import com.jh.discord.service.DiscordService;
 
 import lombok.RequiredArgsConstructor;

@@ -1,4 +1,4 @@
-package com.jh.discord.discord.router;
+package com.jh.discord.router;
 
 import org.springframework.stereotype.Service;
 
@@ -10,14 +10,15 @@ import lombok.RequiredArgsConstructor;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 
-//@Service
+@Service
 @RequiredArgsConstructor
 public class CommandRouter {
-
+	
 	private final AirService airService;
 	private final LottoService lottoService;
 	private final FortuneService fortuneService;
-
+	
+	
 	public String router(SlashCommandInteractionEvent event) {
 		String command = event.getName();
 	    String result;
@@ -73,6 +74,9 @@ public class CommandRouter {
 		
 		return result;
 	}
+
+	
+	
 	public String route(String message) {
 		// 메세지가 없으면 종료
 		if (message == null || message.isBlank()) return null;
@@ -135,5 +139,4 @@ public class CommandRouter {
 		
 		return result;
 	}
-
 }

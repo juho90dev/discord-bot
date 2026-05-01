@@ -1,6 +1,5 @@
-package com.jh.discord.domain.dailyAir;
+package com.jh.discord.dailyAir.service;
 
-import java.net.URI;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
@@ -8,35 +7,33 @@ import java.time.format.DateTimeFormatter;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
-import org.springframework.web.reactive.function.client.WebClient;
-import org.springframework.web.util.UriComponentsBuilder;
 
-import com.jh.discord.domain.dailyAir.dto.GeoPoint;
+import com.jh.discord.dailyAir.client.AirApiClient;
+import com.jh.discord.dailyAir.domain.GeoPoint;
+import com.jh.discord.dailyAir.domain.LocationCode;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import tools.jackson.databind.JsonNode;
 import tools.jackson.databind.ObjectMapper;
 
-//@Service
-@RequiredArgsConstructor
+
+@Service
 @Slf4j
+@RequiredArgsConstructor
 public class AirService {
-
-	private final WebClient webClient;
-
+	
 	@Value("${api.weather.service-key}")
 	private String SERVICE_KEY;
 
 	private final String DUST_URL = "http://apis.data.go.kr/B552584/ArpltnInforInqireSvc/getMsrstnAcctoRltmMesureDnsty";
 
 	private final String TEMP_URL = "http://apis.data.go.kr/1360000/VilageFcstInfoService_2.0/getUltraSrtNcst";
-
+	
 	private final AirApiClient airApiClient;
-
+	
 	private final ObjectMapper mapper = new ObjectMapper();
-
+	
 	public String getDustData() {
 		try {
 
@@ -336,4 +333,5 @@ public class AirService {
 			return "날씨 데이터를 불러오는 데 실패했습니다.";
 		}
 	}
+
 }

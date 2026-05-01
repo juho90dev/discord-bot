@@ -1,4 +1,4 @@
-package com.jh.discord.domain.dailyAir;
+package com.jh.discord.dailyAir.client;
 
 import java.net.URI;
 
@@ -10,10 +10,11 @@ import org.springframework.web.util.UriComponentsBuilder;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-//@Component
-@RequiredArgsConstructor
+@Component
 @Slf4j
+@RequiredArgsConstructor
 public class AirApiClient {
+
 	
 	@Value("${api.weather.service-key}")
 	private String SERVICE_KEY;
@@ -24,7 +25,9 @@ public class AirApiClient {
 
 	private final String TEMP_URL = "http://apis.data.go.kr/1360000/VilageFcstInfoService_2.0/getUltraSrtNcst";
 	
-	public String dustApi(String stationName) {
+	
+	
+public String dustApi(String stationName) {
 		
 		URI uri = UriComponentsBuilder.fromUriString(DUST_URL)
                 .queryParam("serviceKey", SERVICE_KEY)

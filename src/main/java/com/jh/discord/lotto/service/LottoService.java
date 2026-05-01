@@ -1,14 +1,9 @@
-package com.jh.discord.domain.lotto;
-
-import java.util.ArrayList;
-import java.util.List;
+package com.jh.discord.lotto.service;
 
 import org.springframework.stereotype.Service;
 
-
 @Service
 public class LottoService {
-
 	
 	public String lottoNum(){
 		int [] lotto = new int[6];
@@ -51,4 +46,5 @@ public class LottoService {
 		return sb.toString();
 		
 	}
+
 }
