@@ -2,6 +2,7 @@ package com.jh.discord.discord.router;
 
 import org.springframework.stereotype.Service;
 
+import com.jh.discord.audio.service.AudioService;
 import com.jh.discord.dailyAir.service.AirService;
 import com.jh.discord.dailyFortune.service.FortuneService;
 import com.jh.discord.lotto.service.LottoService;
@@ -17,7 +18,10 @@ public class CommandRouter {
 	private final AirService airService;
 	private final LottoService lottoService;
 	private final FortuneService fortuneService;
-
+	private final AudioService audioService;
+	
+	
+	
 	public String router(SlashCommandInteractionEvent event) {
 		String command = event.getName();
 	    String result;

@@ -14,6 +14,7 @@ import net.dv8tion.jda.api.interactions.commands.Command;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.Commands;
 import net.dv8tion.jda.api.interactions.commands.build.OptionData;
+import net.dv8tion.jda.api.interactions.commands.build.SubcommandData;
 import net.dv8tion.jda.api.requests.GatewayIntent;
 
 @Configuration
@@ -70,7 +71,14 @@ public class DiscordConfig {
 					Commands.slash("운세", "오늘의 운세를 알려줍니다 (띠를 입력하지 않으면 전체 요약)")
 						.addOptions(new OptionData(OptionType.STRING, "name", "확인할 띠를 입력하세요 (예: 말띠)", false)),
 					Commands.slash("옥희", "옥희보살의 개발자 운세를 알려줍니다 (띠를 입력하지 않으면 전체 요약)")
-						.addOptions(new OptionData(OptionType.STRING, "okky", "확인할 띠를 입력하세요 (예: 말띠)", false))
+						.addOptions(new OptionData(OptionType.STRING, "okky", "확인할 띠를 입력하세요 (예: 말띠)", false)),
+					Commands.slash("노래", "음악 재생 및 제어")
+						.addSubcommands(
+							new SubcommandData("재생", "노래를 틀어줍니다 (곡명이나 링크 입력)")
+								.addOptions(new OptionData(OptionType.STRING, "곡", "가수명까지 적으면 더 정확해요!", true)),
+							new SubcommandData("스킵", "현재 곡을 건너뜁니다"),
+							new SubcommandData("나가", "봇을 음성 채널에서 내보냅니다")
+						)
 				).queue();
 			
 			return jda;
