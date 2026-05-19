@@ -40,5 +40,5 @@ public class AudioPlayerSendHandler implements AudioSendHandler{
         // LavaPlayer는 기본적으로 Opus 인코딩을 사용
         return true;
     }
-
+ 
 }
